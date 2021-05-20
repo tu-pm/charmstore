@@ -360,7 +360,9 @@ func (h *ReqHandler) checkRequest(p authorizeParams) (Authorization, error) {
 		if user != h.Handler.config.AuthUsername || passwd != h.Handler.config.AuthPassword {
 			return Authorization{}, errgo.WithCausef(nil, params.ErrUnauthorized, "invalid user name or password")
 		}
-		return Authorization{Admin: true}, nil
+		ident, _ := h.Handler.idmClient.DeclaredIdentity(map[string]string{"username": user})
+		idmUser := ident.(*idmclient.User)
+		return Authorization{Admin: true, User: idmUser, Username: user}, nil
 	}
 	bk := h.Store.Bakery
 	if errgo.Cause(err) != errNoCreds || bk == nil || h.Handler.config.IdentityLocation == "" {

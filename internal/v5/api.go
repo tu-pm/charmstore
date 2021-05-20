@@ -1442,12 +1442,15 @@ func (h *ReqHandler) serveWhoAmI(_ http.Header, req *http.Request) (interface{},
 	if err != nil {
 		return nil, errgo.Mask(err, errgo.Any)
 	}
+	var groups []string
 	if auth.Admin {
-		return nil, errgo.WithCausef(nil, params.ErrForbidden, "admin credentials used")
-	}
-	groups, err := auth.User.Groups()
-	if err != nil {
-		return nil, errgo.Mask(err, errgo.Any)
+		groups = []string{"admin"}
+	} else {
+		groups, err = auth.User.Groups()
+
+		if err != nil {
+			return nil, errgo.Mask(err, errgo.Any)
+		}
 	}
 	return params.WhoAmIResponse{
 		User:   auth.Username,
