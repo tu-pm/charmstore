@@ -377,3 +377,12 @@ type DownloadCount struct {
 	// needed.
 	Expires *time.Time `bson:"expires,omitempty"`
 }
+
+// User stores user information for authorization
+type User struct {
+	// Username is the user identity to be authorized by the Store
+	Username string
+
+	// Password is the user's password
+	Password string `json:",omitempty"`
+}

@@ -103,6 +103,7 @@ func serve(conf *config.Config) error {
 	cfg := charmstore.ServerParams{
 		AuthUsername:                   conf.AuthUsername,
 		AuthPassword:                   conf.AuthPassword,
+		EnableBasicAuth:                conf.EnableBasicAuth,
 		IdentityLocation:               conf.IdentityLocation,
 		TermsLocation:                  conf.TermsLocation,
 		AgentUsername:                  conf.AgentUsername,

@@ -2,6 +2,7 @@ mongo-url: localhost:27017
 api-addr: localhost:8080
 auth-username: admin
 auth-password: example-passwd
+enable-basic-auth: true
 identity-public-key: CIdWcEUN+0OZnKW9KwruRQnQDY/qqzVdD30CijwiWCk=
 identity-location: http://localhost:8000/identity/v1/discharger
 logging-config: "<root>=DEBUG;mgo=INFO;bakery=INFO;httpbakery=INFO"

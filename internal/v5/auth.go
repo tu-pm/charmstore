@@ -222,6 +222,35 @@ func (h *ReqHandler) authorize(p authorizeParams) (Authorization, error) {
 		// TODO return Username: "everyone" here?
 		return Authorization{}, nil
 	}
+
+	if h.Handler.config.EnableBasicAuth {
+		auth, err := h.basicAuth(p)
+		if err == nil && !auth.Admin {
+			isWrite := func() bool {
+				for _, op := range p.ops {
+					if op == OpWrite {
+						return true
+					}
+				}
+				return false
+			}
+			writable := func() bool {
+				for _, acl := range p.acls {
+					for _, user := range acl.Write {
+						if auth.Username == user {
+							return true
+						}
+					}
+				}
+				return false
+			}
+			if isWrite() && writable() {
+				return Authorization{}, errgo.WithCausef(nil, params.ErrUnauthorized, "")
+			}
+		}
+		return auth, err
+	}
+
 	auth, verr := h.checkRequest(p)
 	if verr == nil {
 		// The request is OK. Now check that the user associated with
@@ -345,6 +374,20 @@ func (h *ReqHandler) addEntitiesACLs(set *aclSet, ids []*router.ResolvedURL) err
 		set.add(acl)
 	}
 	return nil
+}
+
+func (h *ReqHandler) basicAuth(p authorizeParams) (Authorization, error) {
+	user, passwd, err := parseCredentials(p.req)
+	if err != nil {
+		return Authorization{}, err
+	}
+	if user == h.Handler.config.AuthUsername && passwd == h.Handler.config.AuthPassword {
+		return Authorization{Admin: true, User: nil, Username: user}, nil
+	}
+	if h.Store.ValidateUser(&mongodoc.User{Username: user, Password: passwd}) {
+		return Authorization{Admin: false, User: nil, Username: user}, nil
+	}
+	return Authorization{}, errgo.Mask(params.ErrUnauthorized)
 }
 
 var errActiveTimeExpired = errgo.New("active time expired")

@@ -30,6 +30,7 @@ type Config struct {
 	APIAddr                        string            `yaml:"api-addr,omitempty"`
 	AuthUsername                   string            `yaml:"auth-username,omitempty"`
 	AuthPassword                   string            `yaml:"auth-password,omitempty"`
+	EnableBasicAuth                bool              `yaml:"enable-basic-auth,omitempty"`
 	ESAddr                         string            `yaml:"elasticsearch-addr,omitempty"` // elasticsearch is optional
 	IdentityPublicKey              *bakery.PublicKey `yaml:"identity-public-key,omitempty"`
 	IdentityLocation               string            `yaml:"identity-location"`

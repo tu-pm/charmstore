@@ -60,8 +60,9 @@ type HTTPCloseHandler interface {
 type ServerParams struct {
 	// AuthUsername and AuthPassword hold the credentials
 	// used for HTTP basic authentication.
-	AuthUsername string
-	AuthPassword string
+	AuthUsername    string
+	AuthPassword    string
+	EnableBasicAuth bool
 
 	// IdentityLocation holds the location of the third party authorization
 	// service to use when creating third party caveats,

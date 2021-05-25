@@ -223,6 +223,7 @@ func RouterHandlers(h *ReqHandler) *router.Handlers {
 			"whoami":               router.HandleJSON(h.serveWhoAmI),
 			"upload":               router.HandleErrors(h.serveUploadId),
 			"upload/":              router.HandleErrors(h.serveUploadPart),
+			"users/":               router.HandleJSON(h.serveUsers),
 		},
 		Id: map[string]router.IdHandler{
 			"archive":                     h.serveArchive,
@@ -1446,11 +1447,7 @@ func (h *ReqHandler) serveWhoAmI(_ http.Header, req *http.Request) (interface{},
 	if auth.Admin {
 		groups = []string{"admin"}
 	} else {
-		groups, err = auth.User.Groups()
-
-		if err != nil {
-			return nil, errgo.Mask(err, errgo.Any)
-		}
+		groups = []string{"user"}
 	}
 	return params.WhoAmIResponse{
 		User:   auth.Username,

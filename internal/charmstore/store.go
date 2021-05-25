@@ -1434,6 +1434,11 @@ func (s StoreDatabase) DownloadCounts() *mgo.Collection {
 	return s.C("download_counts")
 }
 
+// Users returns the Mongo collection where users are stored
+func (s StoreDatabase) Users() *mgo.Collection {
+	return s.C("users")
+}
+
 // allCollections holds for each collection used by the charm store a
 // function returns that collection.
 var allCollections = []func(StoreDatabase) *mgo.Collection{
@@ -1445,6 +1450,7 @@ var allCollections = []func(StoreDatabase) *mgo.Collection{
 	StoreDatabase.Migrations,
 	StoreDatabase.Resources,
 	StoreDatabase.Revisions,
+	StoreDatabase.Users,
 }
 
 // Collections returns a slice of all the collections used
